@@ -23,5 +23,5 @@
 /nbdist/
 /.nb-gradle/
 /build/
-src/main/resources/static/
-src/main/resources/templates/
+src/Main/resources/static/
+src/Main/resources/templates/
