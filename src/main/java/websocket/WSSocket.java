@@ -1,8 +1,10 @@
 package websocket;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 /**
  * @param: none
@@ -12,11 +14,22 @@ import io.netty.channel.nio.NioEventLoopGroup;
  **/
 public class WSSocket {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        EventLoopGroup mainGruop = new NioEventLoopGroup();
+        EventLoopGroup mainGroup = new NioEventLoopGroup();
         EventLoopGroup subGroup = new NioEventLoopGroup();
 
-        ServerBootstrap bootstrap = new ServerBootstrap();
+        try {
+            ServerBootstrap serverBootstrap = new ServerBootstrap();
+            serverBootstrap.group(mainGroup, subGroup)
+                    .channel(NioServerSocketChannel.class)
+                    .childHandler(new WSServerInitializer());
+
+            ChannelFuture future = serverBootstrap.bind(8084).sync();
+            future.channel().closeFuture().sync();
+        } finally {
+            mainGroup.shutdownGracefully();
+            subGroup.shutdownGracefully();
+        }
     }
 }

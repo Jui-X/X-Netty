@@ -1,4 +1,5 @@
-import io.netty.bootstrap.Bootstrap;
+package nettyinaction;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -22,7 +23,7 @@ public class EchoServer {
         this.port = port;
     }
 
-    public void start() {
+    public void start() throws Exception {
         final EchoServerHandler serverHandler = new EchoServerHandler();
         EventLoopGroup group = new NioEventLoopGroup();
 
@@ -31,16 +32,21 @@ public class EchoServer {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(group)
                     .channel(NioServerSocketChannel.class)                      // 指定NIO传输channel
-                    .localAddress(new InetSocketAddress(port))                  // 绑定端口
+                    .localAddress(new InetSocketAddress(port))                  // 使用指定端口设置套接字地址
                     .childHandler(new ChannelInitializer<SocketChannel>() {     // 添加一个EchoServerHandler到子Channel的Channel Pipeline
-                        protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        protected void initChannel(SocketChannel socketChannel) throws Exception {      // 添加一个EchoServerHandler到子Channel的ChannelPipeline
                             socketChannel.pipeline().addLast(serverHandler);
                         }
                     });
-            ChannelFuture f = bootstrap.bind().sync();
-            f.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            ChannelFuture f = bootstrap.bind().sync();                          // 异步绑定服务器；调用sync()方法阻塞等待知道绑定完成
+            f.channel().closeFuture().sync();                                   // 获取Channel的CloseFuture，并阻塞当前线程直到他完成
+        } finally {
+            group.shutdownGracefully();                                         // 关闭EventGroupLoop，释放所有资源
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        int port = 8083;
+        new nettyinaction.EchoClient(port).start();
     }
 }

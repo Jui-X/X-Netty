@@ -1,10 +1,10 @@
-package netty;
+package websocket;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpServerCodec;
-import netty.CustomHandler;
+import websocket.CustomHandler;
 
 /**
  * @param: none
@@ -13,7 +13,7 @@ import netty.CustomHandler;
  * @author: KingJ
  * @create: 2019-07-06 16:20
  **/
-public class XServerInitializer extends ChannelInitializer<SocketChannel> {
+public class ServerInitializer extends ChannelInitializer<SocketChannel> {
 
     protected void initChannel(SocketChannel channel) throws Exception {
         // 通过SocketChannel去获得对应的pipeline管道

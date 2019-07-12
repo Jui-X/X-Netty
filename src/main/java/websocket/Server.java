@@ -1,4 +1,4 @@
-package netty;
+package websocket;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -13,7 +13,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
  * @author: KingJ
  * @create: 2019-07-04 23:26
  **/
-public class XServer {
+public class Server {
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -28,7 +28,7 @@ public class XServer {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.group(fatherGroup, sonGroup)        // 设置主从线程组
                     .channel(NioServerSocketChannel.class)      // 设置NIO的双向通道
-                    .childHandler(new XServerInitializer());    // 子处理器，用于处理sonGroup
+                    .childHandler(new ServerInitializer());    // 子处理器，用于处理sonGroup
 
             // 启动Server，设置8088为启动端口号，启动方式为同步
             ChannelFuture channelFuture = serverBootstrap.bind(8088).sync();

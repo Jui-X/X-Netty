@@ -1,3 +1,7 @@
+import nettyinaction.EchoClient;
+
+import java.net.Inet4Address;
+
 /**
  * @param: none
  * @description:
@@ -6,9 +10,5 @@
  **/
 public class Main {
 
-    public static void main(String[] args) {
-        int port = 8083;
-        // new EchoServer(port).start();
 
-    }
 }
