@@ -7,9 +7,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-
-import java.net.Inet4Address;
-import java.net.InetSocketAddress;
+import io.netty.channel.socket.nio.NioSocketChannel;
 
 /**
  * @param: none
@@ -29,11 +27,11 @@ public class EchoClient {
         try {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(group)
-                    .channel(NioServerSocketChannel.class)
-                    .remoteAddress(new InetSocketAddress(Inet4Address.getLocalHost().getHostAddress(), port))
-                    .handler(new ChannelInitializer<NioServerSocketChannel>() {
+                    .channel(NioSocketChannel.class)
+                    .remoteAddress("localhost", port)
+                    .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        protected void initChannel(NioServerSocketChannel socketChannel) throws Exception {
+                        protected void initChannel(SocketChannel socketChannel) {
                             socketChannel.pipeline()
                                     .addLast(new EchoClientHandler());
                         }

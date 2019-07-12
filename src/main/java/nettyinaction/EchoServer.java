@@ -7,6 +7,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.net.InetSocketAddress;
 
@@ -33,8 +34,8 @@ public class EchoServer {
             bootstrap.group(group)
                     .channel(NioServerSocketChannel.class)                      // 指定NIO传输channel
                     .localAddress(new InetSocketAddress(port))                  // 使用指定端口设置套接字地址
-                    .childHandler(new ChannelInitializer<SocketChannel>() {     // 添加一个EchoServerHandler到子Channel的Channel Pipeline
-                        protected void initChannel(SocketChannel socketChannel) throws Exception {      // 添加一个EchoServerHandler到子Channel的ChannelPipeline
+                    .childHandler(new ChannelInitializer<NioSocketChannel>() {     // 添加一个EchoServerHandler到子Channel的Channel Pipeline
+                        protected void initChannel(NioSocketChannel socketChannel) throws Exception {      // 添加一个EchoServerHandler到子Channel的ChannelPipeline
                             socketChannel.pipeline().addLast(serverHandler);
                         }
                     });
@@ -47,6 +48,6 @@ public class EchoServer {
 
     public static void main(String[] args) throws Exception {
         int port = 8083;
-        new nettyinaction.EchoClient(port).start();
+        new nettyinaction.EchoServer(port).start();
     }
 }
