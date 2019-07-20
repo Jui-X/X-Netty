@@ -27,7 +27,7 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         // ctx异步执行write操作，在write()操作完成之前，channelRead()方法可能先行返回
         // 因此继承ChannelInboundHandlerAdapter，其在ChannelRead完成返回之后，不会释放保存消息的ByteBuf的内存引用
-        // 消息在channelReadComplete方法中，当wirteAndFlush被调用时被释放
+        // 消息在channelReadComplete方法中，当writeAndFlush被调用时被释放
         ctx.writeAndFlush(Unpooled.EMPTY_BUFFER)
                 .addListener(ChannelFutureListener.CLOSE);
     }

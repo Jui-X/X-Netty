@@ -8,8 +8,11 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
+import websocket.HeartBeatHandler;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @param: none
@@ -37,6 +40,8 @@ public class EchoServer {
                     .childHandler(new ChannelInitializer<NioSocketChannel>() {     // 添加一个EchoServerHandler到子Channel的Channel Pipeline
                         protected void initChannel(NioSocketChannel socketChannel) throws Exception {      // 添加一个EchoServerHandler到子Channel的ChannelPipeline
                             socketChannel.pipeline().addLast(serverHandler);
+                            socketChannel.pipeline().addLast(new IdleStateHandler(0, 0, 60, TimeUnit.SECONDS));
+                            socketChannel.pipeline().addLast(new HeartBeatHandler());
                         }
                     });
             ChannelFuture f = bootstrap.bind().sync();                          // 异步绑定服务器；调用sync()方法阻塞等待知道绑定完成
