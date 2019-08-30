@@ -1,6 +1,7 @@
 package netty.protocol.response;
 
 import lombok.Data;
+import netty.enums.CommandEnum;
 import netty.protocol.Packet;
 
 /**
@@ -11,11 +12,13 @@ import netty.protocol.Packet;
  **/
 @Data
 public class LoginResponsePacket extends Packet {
+    private String userId;
+    private String userName;
     private boolean success;
     private String reason;
 
     @Override
     public Byte getCommand() {
-        return null;
+        return CommandEnum.LOGIN_RESPONSE.getValue();
     }
 }

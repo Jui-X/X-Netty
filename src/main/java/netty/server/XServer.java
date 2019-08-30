@@ -1,16 +1,12 @@
 package netty.server;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.*;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import websocket.ServerInitializer;
 
 import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
 
 /**
  * @param: none
@@ -19,26 +15,30 @@ import java.nio.charset.Charset;
  * @create: 2019-07-13 19:45
  **/
 public class XServer {
-    public void server(int port) throws Exception {
-        final ByteBuf buf = Unpooled.unreleasableBuffer(
-                Unpooled.copiedBuffer("Hi!\r\n", Charset.forName("UTF-8")));
-        NioEventLoopGroup group = new NioEventLoopGroup();
+    private static final int PORT = 8084;
+
+    public static void main(String[] args) {
+        NioEventLoopGroup boss = new NioEventLoopGroup();
+        NioEventLoopGroup worker = new NioEventLoopGroup();
+
         try {
-            ServerBootstrap b = new ServerBootstrap();    //1
-            b.group(new NioEventLoopGroup(), new NioEventLoopGroup())
+            ServerBootstrap b = new ServerBootstrap();
+            b.group(boss, worker)
                     .channel(NioServerSocketChannel.class)
-                    .localAddress(new InetSocketAddress(port))
-                    .childHandler(new ChannelInitializer<SocketChannel>() {    //3
-                        @Override
-                        public void initChannel(SocketChannel ch)
-                                throws Exception {
-                            ch.pipeline().addLast(new ServerInitializer());
-                        }
-                    });
-            ChannelFuture f = b.bind().sync();                    //6
+                    .localAddress(new InetSocketAddress("localhost", PORT))
+                    .option(ChannelOption.SO_BACKLOG, 1024)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true)
+                    .childOption(ChannelOption.TCP_NODELAY, true)
+                    .childHandler(new ServerInitializer());
+
+            ChannelFuture f = b.bind().sync();
             f.channel().closeFuture().sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } finally {
-            group.shutdownGracefully().sync();                    //7
+            boss.shutdownGracefully();
+            worker.shutdownGracefully();
         }
+
     }
 }

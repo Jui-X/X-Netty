@@ -1,9 +1,16 @@
 package netty.client;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import netty.protocol.request.LoginRequestPacket;
+import netty.protocol.request.MessageRequestPacket;
+import netty.util.SessionUtil;
 
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -18,19 +25,31 @@ public class XClient {
     public static void main(String[] args) {
         NioEventLoopGroup worker =  new NioEventLoopGroup();
 
-        Bootstrap bootstrap = new Bootstrap();
-        bootstrap.group(worker)
-                .channel(NioSocketChannel.class)
-                .handler(new ClientInitializer());
+        try {
+            Bootstrap bootstrap = new Bootstrap();
+            bootstrap.group(worker)
+                    .channel(NioSocketChannel.class)
+                    .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
+                    .option(ChannelOption.SO_KEEPALIVE, true)
+                    .option(ChannelOption.TCP_NODELAY, true)
+                    .handler(new ClientInitializer());
 
-        connect(bootstrap, "localhost", 8084, MAX_RETRY);
+            ChannelFuture future = connect(bootstrap, "localhost", 8084, MAX_RETRY);
+            future.channel().closeFuture().sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            worker.shutdownGracefully();
+        }
     }
 
-    private static void connect(Bootstrap bootstrap, String host, int port, int retry) {
-        bootstrap.connect(host, 8081)
+    private static ChannelFuture connect(Bootstrap bootstrap, String host, int port, int retry) {
+        ChannelFuture channelFuture = bootstrap.connect(host, port)
                 .addListener(future -> {
                     if (future.isSuccess()) {
                         System.out.println("Connect succeed");
+                        Channel channel = ((ChannelFuture) future).channel();
+                        startConsoleThread(channel);
                     } else if (retry == 0) {
                         System.out.println("Reconnect too much");
                     } else {
@@ -42,5 +61,41 @@ public class XClient {
                                 delay, TimeUnit.SECONDS);
                     }
                 });
+
+        return channelFuture;
+    }
+
+    private static void startConsoleThread(Channel channel) {
+        Scanner sc = new Scanner(System.in);
+        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+
+        new Thread(() -> {
+            while (!Thread.interrupted()) {
+                if (!SessionUtil.isLogin(channel)) {
+                    System.out.print("plz input username: ");
+                    String userName = sc.next();
+                    loginRequestPacket.setUserName(userName);
+                    loginRequestPacket.setPassword("123456");
+
+                    channel.writeAndFlush(loginRequestPacket);
+                    // 等待登录逻辑处理时间：1000ms
+                    waitForLoginResponse();
+                } else {
+                    System.out.println("ready to send to server...");
+                    String toUserId = sc.next();
+                    String message = sc.next();
+
+                    channel.writeAndFlush(new MessageRequestPacket(toUserId, message));
+                }
+            }
+        }).start();
+    }
+
+    private static void waitForLoginResponse() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -3,8 +3,14 @@ package netty.server;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.HttpServerCodec;
-import websocket.CustomHandler;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import netty.codec.PacketDecoder;
+import netty.codec.PacketEncoder;
+import netty.codec.Spliter;
+import netty.server.handler.AuthHandler;
+import netty.server.handler.LoginRequestHandler;
+import netty.server.handler.MessageRequestHandler;
 
 /**
  * @param: none
@@ -13,9 +19,9 @@ import websocket.CustomHandler;
  * @author: KingJ
  * @create: 2019-07-06 16:20
  **/
-public class ServerInitializer extends ChannelInitializer<SocketChannel> {
+public class ServerInitializer extends ChannelInitializer<NioSocketChannel> {
 
-    protected void initChannel(SocketChannel channel) throws Exception {
+    protected void initChannel(NioSocketChannel channel) throws Exception {
         // 通过SocketChannel去获得对应的pipeline管道
         ChannelPipeline pipeline = channel.pipeline();
 
@@ -25,6 +31,14 @@ public class ServerInitializer extends ChannelInitializer<SocketChannel> {
         // pipeline.addLast("HttpServerCodec", new HttpServerCodec());
         // 添加自定义的助手类，返回"Hello Netty~"
         // pipeline.addLast("customHandler", new CustomHandler());
-        pipeline.addLast();
+
+        // 基于自定义协议的长度域拆包器，长度域偏移量为7，需要读取的长度域长度为4个字节
+        // 自定义协议的包结构参见Packet类
+        pipeline.addLast(new Spliter());
+        pipeline.addLast(new PacketDecoder());
+        pipeline.addLast(new LoginRequestHandler());
+        pipeline.addLast(new AuthHandler());
+        pipeline.addLast(new MessageRequestHandler());
+        pipeline.addLast(new PacketEncoder());
     }
 }
