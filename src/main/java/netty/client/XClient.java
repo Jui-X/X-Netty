@@ -6,6 +6,8 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import netty.client.console.ConsoleCommandManager;
+import netty.client.console.LoginConsoleCommand;
 import netty.protocol.request.LoginRequestPacket;
 import netty.protocol.request.MessageRequestPacket;
 import netty.util.SessionUtil;
@@ -67,35 +69,17 @@ public class XClient {
 
     private static void startConsoleThread(Channel channel) {
         Scanner sc = new Scanner(System.in);
-        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+        ConsoleCommandManager consoleCommandManager = new ConsoleCommandManager();
+        LoginConsoleCommand loginConsoleCommand = new LoginConsoleCommand();
 
         new Thread(() -> {
             while (!Thread.interrupted()) {
                 if (!SessionUtil.isLogin(channel)) {
-                    System.out.print("plz input username: ");
-                    String userName = sc.next();
-                    loginRequestPacket.setUserName(userName);
-                    loginRequestPacket.setPassword("123456");
-
-                    channel.writeAndFlush(loginRequestPacket);
-                    // 等待登录逻辑处理时间：1000ms
-                    waitForLoginResponse();
+                    loginConsoleCommand.exec(sc, channel);
                 } else {
-                    System.out.println("ready to send to server...");
-                    String toUserId = sc.next();
-                    String message = sc.next();
-
-                    channel.writeAndFlush(new MessageRequestPacket(toUserId, message));
+                    consoleCommandManager.exec(sc, channel);
                 }
             }
         }).start();
-    }
-
-    private static void waitForLoginResponse() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }

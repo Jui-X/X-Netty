@@ -4,10 +4,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import netty.enums.CommandEnum;
 import netty.enums.SerializeEnum;
-import netty.protocol.request.LoginRequestPacket;
-import netty.protocol.request.MessageRequestPacket;
-import netty.protocol.response.LoginResponsePacket;
-import netty.protocol.response.MessageResponsePacket;
+import netty.protocol.request.*;
+import netty.protocol.response.*;
 import netty.serialize.Serializer;
 import netty.serialize.impl.JSONSerializer;
 
@@ -34,6 +32,16 @@ public class PacketCodeC {
         packetTypeMap.put(CommandEnum.LOGIN_RESPONSE.getValue(), LoginResponsePacket.class);
         packetTypeMap.put(CommandEnum.MESSAGE_REQUEST.getValue(), MessageRequestPacket.class);
         packetTypeMap.put(CommandEnum.MESSAGE_RESPONSE.getValue(), MessageResponsePacket.class);
+        packetTypeMap.put(CommandEnum.CREATE_GROUP_REQUEST.getValue(), CreateGroupRequestPacket.class);
+        packetTypeMap.put(CommandEnum.CREATE_GROUP_RESPONSE.getValue(), CreateGroupResponsePacket.class);
+        packetTypeMap.put(CommandEnum.LOGOUT_REQUEST.getValue(), LogoutRequestPacket.class);
+        packetTypeMap.put(CommandEnum.LOGOUT_RESPONSE.getValue(), LogoutResponsePacket.class);
+        packetTypeMap.put(CommandEnum.JOIN_GROUP_REQUEST.getValue(), JoinGroupRequestPacket.class);
+        packetTypeMap.put(CommandEnum.JOIN_GROUP_RESPONSE.getValue(), JoinGroupResponsePacket.class);
+        packetTypeMap.put(CommandEnum.QUIT_GROUP_REQUEST.getValue(), QuitGroupRequestPacket.class);
+        packetTypeMap.put(CommandEnum.QUIT_GROUP_RESPONSE.getValue(), QuitGroupResponsePacket.class);
+        packetTypeMap.put(CommandEnum.LIST_GROUP_MEMBER_REQUEST.getValue(), ListGroupMemberRequestPacket.class);
+        packetTypeMap.put(CommandEnum.LIST_GROUP_MEMBER_RESPONSE.getValue(), ListGroupMemberResponsePacket.class);
 
         // 存放 序列化算法 和 序列化实现类的映射
         serializerMap = new HashMap<>();

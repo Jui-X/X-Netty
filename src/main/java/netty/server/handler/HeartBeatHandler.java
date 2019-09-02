@@ -1,4 +1,4 @@
-package websocket;
+package netty.server.handler;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -23,12 +23,12 @@ public class HeartBeatHandler extends ChannelInboundHandlerAdapter {
             IdleStateEvent event = (IdleStateEvent) evt;
 
             if (event.state() == IdleState.READER_IDLE) {
-
+                // System.out.println("Server is READER_IDLE");
             } else if (event.state() == IdleState.WRITER_IDLE) {
-
+                // System.out.println("Server is WRITER_IDLE");
             } else if (event.state() == IdleState.ALL_IDLE) {
                 Channel channel = ctx.channel();
-                channel.close();
+                // channel.close();
             }
         }
 

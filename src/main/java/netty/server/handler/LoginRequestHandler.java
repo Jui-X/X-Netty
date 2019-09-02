@@ -1,14 +1,12 @@
 package netty.server.handler;
 
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import netty.protocol.request.LoginRequestPacket;
 import netty.protocol.response.LoginResponsePacket;
 import netty.session.Session;
+import netty.util.IDUtil;
 import netty.util.SessionUtil;
-
-import java.util.UUID;
 
 /**
  * @param: none
@@ -27,7 +25,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
 
         // 校验登录
         if (valid(loginRequestPacket)) {
-            String userId = getUserId();
+            String userId = IDUtil.randomId();
             String userName = loginRequestPacket.getUserName();
             loginResponsePacket.setUserId(userId);
             loginResponsePacket.setSuccess(true);
@@ -35,7 +33,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
             System.out.println(userId + "-" + userName + " login successfully");
         } else {
             loginResponsePacket.setSuccess(false);
-            loginResponsePacket.setReason("登录校验失败，请检查账号或密码是否正确。");
+            loginResponsePacket.setReason("login failed, plz check ur name and pwd!");
         }
 
         ctx.channel().writeAndFlush(loginResponsePacket);
@@ -43,10 +41,6 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
 
     private boolean valid(LoginRequestPacket requestPacket) {
         return true;
-    }
-
-    private static String getUserId() {
-        return UUID.randomUUID().toString().split("-")[0];
     }
 
     @Override

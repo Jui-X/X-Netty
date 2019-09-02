@@ -5,12 +5,11 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.timeout.IdleStateHandler;
 import netty.codec.PacketDecoder;
 import netty.codec.PacketEncoder;
 import netty.codec.Spliter;
-import netty.server.handler.AuthHandler;
-import netty.server.handler.LoginRequestHandler;
-import netty.server.handler.MessageRequestHandler;
+import netty.server.handler.*;
 
 /**
  * @param: none
@@ -39,6 +38,13 @@ public class ServerInitializer extends ChannelInitializer<NioSocketChannel> {
         pipeline.addLast(new LoginRequestHandler());
         pipeline.addLast(new AuthHandler());
         pipeline.addLast(new MessageRequestHandler());
+        pipeline.addLast(new CreateGroupRequestHandler());
+        pipeline.addLast(new JoinGroupRequestHandler());
+        pipeline.addLast(new QuitGroupRequestHandler());
+        pipeline.addLast(new ListGroupMemberRequestHandler());
+        pipeline.addLast(new LogoutRequestHandler());
+        pipeline.addLast(new IdleStateHandler(30, 50, 70));
+        pipeline.addLast(new HeartBeatHandler());
         pipeline.addLast(new PacketEncoder());
     }
 }
