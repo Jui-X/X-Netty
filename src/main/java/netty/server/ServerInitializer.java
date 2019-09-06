@@ -42,6 +42,7 @@ public class ServerInitializer extends ChannelInitializer<NioSocketChannel> {
         pipeline.addLast(new JoinGroupRequestHandler());
         pipeline.addLast(new QuitGroupRequestHandler());
         pipeline.addLast(new ListGroupMemberRequestHandler());
+        pipeline.addLast(new GroupMessageRequestHandler());
         pipeline.addLast(new LogoutRequestHandler());
         pipeline.addLast(new IdleStateHandler(30, 50, 70));
         pipeline.addLast(new HeartBeatHandler());

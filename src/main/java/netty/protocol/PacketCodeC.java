@@ -42,6 +42,8 @@ public class PacketCodeC {
         packetTypeMap.put(CommandEnum.QUIT_GROUP_RESPONSE.getValue(), QuitGroupResponsePacket.class);
         packetTypeMap.put(CommandEnum.LIST_GROUP_MEMBER_REQUEST.getValue(), ListGroupMemberRequestPacket.class);
         packetTypeMap.put(CommandEnum.LIST_GROUP_MEMBER_RESPONSE.getValue(), ListGroupMemberResponsePacket.class);
+        packetTypeMap.put(CommandEnum.MESSAGE_TO_GROUP_REQUEST.getValue(), GroupMessageRequestPacket.class);
+        packetTypeMap.put(CommandEnum.MESSAGE_TO_GROUP_RESPONSE.getValue(), GroupMessageResponsePacket.class);
 
         // 存放 序列化算法 和 序列化实现类的映射
         serializerMap = new HashMap<>();
