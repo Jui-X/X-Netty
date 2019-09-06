@@ -4,6 +4,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import netty.protocol.response.JoinGroupResponsePacket;
 
+import java.util.List;
+
 /**
  * @param: none
  * @description:
@@ -14,7 +16,11 @@ public class JoinGroupResponseHandler extends SimpleChannelInboundHandler<JoinGr
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, JoinGroupResponsePacket joinGroupResponsePacket) throws Exception {
         if (joinGroupResponsePacket.isSuccess()) {
-            System.out.println("u have joined group " + joinGroupResponsePacket.getGroupName() + " successfully!");
+            String groupName = joinGroupResponsePacket.getGroupName();
+            List<String> userList = joinGroupResponsePacket.getUserList();
+
+            System.out.println("u have joined group " + groupName + " successfully!");
+            System.out.println("group members includes: " + userList);
         } else {
             System.out.println("join group " + joinGroupResponsePacket.getGroupName() + " failed!");
         }

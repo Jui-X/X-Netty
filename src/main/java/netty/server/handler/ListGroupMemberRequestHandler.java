@@ -26,18 +26,18 @@ public class ListGroupMemberRequestHandler extends SimpleChannelInboundHandler<L
         ChannelGroup channels = SessionUtil.getChannelGroup(groupName);
 
         // 遍历群成员的Channel，获取对应的Session即成员信息
-        List<Session> sessionList = new ArrayList<>();
+        List<String> userList = new ArrayList<>();
         for (Channel channel : channels) {
             Session session = SessionUtil.getSession(channel);
-            sessionList.add(session);
+            userList.add(session.getUserName());
         }
 
         // 构建成员列表写回响应信息
         ListGroupMemberResponsePacket listGroupMemberResponsePacket = new ListGroupMemberResponsePacket();
 
         listGroupMemberRequestPacket.setGroupName(groupName);
-        listGroupMemberResponsePacket.setSessionList(sessionList);
+        listGroupMemberResponsePacket.setUserList(userList);
 
-        ctx.channel().writeAndFlush(listGroupMemberRequestPacket);
+        ctx.channel().writeAndFlush(listGroupMemberResponsePacket);
     }
 }

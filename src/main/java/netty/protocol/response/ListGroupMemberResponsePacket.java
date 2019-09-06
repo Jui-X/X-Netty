@@ -3,7 +3,6 @@ package netty.protocol.response;
 import lombok.Data;
 import netty.enums.CommandEnum;
 import netty.protocol.Packet;
-import netty.session.Session;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
 @Data
 public class ListGroupMemberResponsePacket extends Packet {
     private String groupName;
-    private List<Session> sessionList;
+    private List<String> userList;
 
     @Override
     public Byte getCommand() {

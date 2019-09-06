@@ -8,8 +8,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import netty.client.console.ConsoleCommandManager;
 import netty.client.console.LoginConsoleCommand;
-import netty.protocol.request.LoginRequestPacket;
-import netty.protocol.request.MessageRequestPacket;
 import netty.util.SessionUtil;
 
 import java.util.Scanner;

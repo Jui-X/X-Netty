@@ -16,6 +16,6 @@ public class QuitGroupRequestPacket extends Packet {
 
     @Override
     public Byte getCommand() {
-        return CommandEnum.JOIN_GROUP_REQUEST.getValue();
+        return CommandEnum.QUIT_GROUP_REQUEST.getValue();
     }
 }

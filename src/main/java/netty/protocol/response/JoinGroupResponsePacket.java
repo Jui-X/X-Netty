@@ -4,6 +4,9 @@ import lombok.Data;
 import netty.enums.CommandEnum;
 import netty.protocol.Packet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @param: none
  * @description:
@@ -13,6 +16,7 @@ import netty.protocol.Packet;
 @Data
 public class JoinGroupResponsePacket extends Packet {
     private String groupName;
+    private List<String> userList = new ArrayList<>();
     private boolean success;
     private String reason;
 

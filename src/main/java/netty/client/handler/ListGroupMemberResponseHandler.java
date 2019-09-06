@@ -4,6 +4,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import netty.protocol.response.ListGroupMemberResponsePacket;
 
+import java.util.List;
+
 /**
  * @param: none
  * @description:
@@ -13,6 +15,8 @@ import netty.protocol.response.ListGroupMemberResponsePacket;
 public class ListGroupMemberResponseHandler extends SimpleChannelInboundHandler<ListGroupMemberResponsePacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ListGroupMemberResponsePacket listGroupMemberResponsePacket) throws Exception {
-        System.out.println("group member include: " + listGroupMemberResponsePacket.getSessionList());
+        List<String> userList = listGroupMemberResponsePacket.getUserList();
+
+        System.out.println("group member include: " + userList);
     }
 }
