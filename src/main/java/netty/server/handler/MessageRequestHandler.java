@@ -1,6 +1,7 @@
 package netty.server.handler;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import netty.protocol.request.MessageRequestPacket;
@@ -14,7 +15,10 @@ import netty.util.SessionUtil;
  * @author: KingJ
  * @create: 2019-08-28 22:13
  **/
+@ChannelHandler.Sharable
 public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRequestPacket> {
+    public static final MessageRequestHandler INSTANCE = new MessageRequestHandler();
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageRequestPacket messageRequestPacket) throws Exception {
         // 拿到消息发送方的Session

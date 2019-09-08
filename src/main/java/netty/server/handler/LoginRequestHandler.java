@@ -1,5 +1,6 @@
 package netty.server.handler;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import netty.protocol.request.LoginRequestPacket;
@@ -14,7 +15,10 @@ import netty.util.SessionUtil;
  * @author: KingJ
  * @create: 2019-08-28 22:12
  **/
+@ChannelHandler.Sharable
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
+    public static final LoginRequestHandler INSTANCE = new LoginRequestHandler();
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket loginRequestPacket) throws Exception {
         System.out.println("receive login request");
@@ -36,7 +40,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
             loginResponsePacket.setReason("login failed, plz check ur name and pwd!");
         }
 
-        ctx.channel().writeAndFlush(loginResponsePacket);
+        ctx.writeAndFlush(loginResponsePacket);
     }
 
     private boolean valid(LoginRequestPacket requestPacket) {

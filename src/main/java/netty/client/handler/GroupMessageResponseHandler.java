@@ -17,6 +17,6 @@ public class GroupMessageResponseHandler extends SimpleChannelInboundHandler<Gro
         String fromUser = groupMessageResponsePacket.getFromUser();
         String message = groupMessageResponsePacket.getMessage();
 
-        System.out.println("receive group [" + fromGroupName + "] " + "user: " + fromUser + "'s message: " + message);
+        System.out.println("receive group [" + fromGroupName + "] " + "user " + fromUser + "'s message: " + message);
     }
 }

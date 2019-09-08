@@ -6,6 +6,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.timeout.IdleStateHandler;
+import netty.codec.PacketCodeCHandler;
 import netty.codec.PacketDecoder;
 import netty.codec.PacketEncoder;
 import netty.codec.Spliter;
@@ -34,18 +35,11 @@ public class ServerInitializer extends ChannelInitializer<NioSocketChannel> {
         // 基于自定义协议的长度域拆包器，长度域偏移量为7，需要读取的长度域长度为4个字节
         // 自定义协议的包结构参见Packet类
         pipeline.addLast(new Spliter());
-        pipeline.addLast(new PacketDecoder());
-        pipeline.addLast(new LoginRequestHandler());
-        pipeline.addLast(new AuthHandler());
-        pipeline.addLast(new MessageRequestHandler());
-        pipeline.addLast(new CreateGroupRequestHandler());
-        pipeline.addLast(new JoinGroupRequestHandler());
-        pipeline.addLast(new QuitGroupRequestHandler());
-        pipeline.addLast(new ListGroupMemberRequestHandler());
-        pipeline.addLast(new GroupMessageRequestHandler());
-        pipeline.addLast(new LogoutRequestHandler());
+        pipeline.addLast(PacketCodeCHandler.INSTANCE);
+        pipeline.addLast(LoginRequestHandler.INSTANCE);
+        pipeline.addLast(AuthHandler.INSTANCE);
+        pipeline.addLast(IMHandler.INSTANCE);
         pipeline.addLast(new IdleStateHandler(30, 50, 70));
         pipeline.addLast(new HeartBeatHandler());
-        pipeline.addLast(new PacketEncoder());
     }
 }

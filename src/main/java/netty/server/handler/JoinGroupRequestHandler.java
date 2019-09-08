@@ -1,6 +1,7 @@
 package netty.server.handler;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -18,7 +19,10 @@ import java.util.List;
  * @author: KingJ
  * @create: 2019-09-02 20:44
  **/
+@ChannelHandler.Sharable
 public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGroupRequestPacket> {
+    public static final JoinGroupRequestHandler INSTANCE = new JoinGroupRequestHandler();
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, JoinGroupRequestPacket joinGroupRequestPacket) throws Exception {
         // 获取群对应的channel group，然后将当前用户的channel加入进去
@@ -38,6 +42,6 @@ public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGro
         joinGroupResponsePacket.setUserList(userList);
         joinGroupResponsePacket.setGroupName(joinGroupRequestPacket.getGroupName());
 
-        ctx.channel().writeAndFlush(joinGroupResponsePacket);
+        ctx.writeAndFlush(joinGroupResponsePacket);
     }
 }
