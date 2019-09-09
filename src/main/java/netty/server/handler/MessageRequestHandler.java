@@ -19,6 +19,10 @@ import netty.util.SessionUtil;
 public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRequestPacket> {
     public static final MessageRequestHandler INSTANCE = new MessageRequestHandler();
 
+    private MessageRequestHandler() {
+
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageRequestPacket messageRequestPacket) throws Exception {
         // 拿到消息发送方的Session

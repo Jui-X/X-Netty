@@ -18,6 +18,10 @@ import netty.util.SessionUtil;
 public class QuitGroupRequestHandler extends SimpleChannelInboundHandler<QuitGroupRequestPacket> {
     public static final QuitGroupRequestHandler INSTANCE = new QuitGroupRequestHandler();
 
+    private QuitGroupRequestHandler() {
+
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, QuitGroupRequestPacket quitGroupRequestPacket) throws Exception {
         // 获取群对应Channel Group，并将当前用户的channel移除

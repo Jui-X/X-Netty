@@ -17,6 +17,10 @@ import netty.util.SessionUtil;
 public class LogoutRequestHandler extends SimpleChannelInboundHandler<LogoutRequestPacket> {
     public static final LogoutRequestHandler INSTANCE = new LogoutRequestHandler();
 
+    private LogoutRequestHandler() {
+
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LogoutRequestPacket msg) throws Exception {
         SessionUtil.unBindSession(ctx.channel());

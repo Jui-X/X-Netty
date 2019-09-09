@@ -30,6 +30,7 @@ public class ClientInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new QuitGroupResponseHandler());
         pipeline.addLast(new ListGroupMemberResponseHandler());
         pipeline.addLast(new GroupMessageResponseHandler());
+        pipeline.addLast(new UploadFileResponseHandler());
         pipeline.addLast(new LogoutResponseHandler());
         pipeline.addLast(new PacketEncoder());
     }

@@ -23,6 +23,10 @@ import java.util.List;
 public class ListGroupMemberRequestHandler extends SimpleChannelInboundHandler<ListGroupMemberRequestPacket> {
     public static final ListGroupMemberRequestHandler INSTANCE = new ListGroupMemberRequestHandler();
 
+    private ListGroupMemberRequestHandler() {
+
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ListGroupMemberRequestPacket listGroupMemberRequestPacket) throws Exception {
         // 获取群名以及对应的Channel Group

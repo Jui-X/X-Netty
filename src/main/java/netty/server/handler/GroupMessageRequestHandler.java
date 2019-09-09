@@ -18,6 +18,10 @@ import netty.util.SessionUtil;
 public class GroupMessageRequestHandler extends SimpleChannelInboundHandler<GroupMessageRequestPacket> {
     public static final GroupMessageRequestHandler INSTANCE = new GroupMessageRequestHandler();
 
+    private GroupMessageRequestHandler() {
+
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, GroupMessageRequestPacket groupMessageRequestPacket) throws Exception {
         String groupName = groupMessageRequestPacket.getToGroup();

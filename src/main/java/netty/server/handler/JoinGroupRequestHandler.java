@@ -23,6 +23,10 @@ import java.util.List;
 public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGroupRequestPacket> {
     public static final JoinGroupRequestHandler INSTANCE = new JoinGroupRequestHandler();
 
+    private JoinGroupRequestHandler() {
+
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, JoinGroupRequestPacket joinGroupRequestPacket) throws Exception {
         // 获取群对应的channel group，然后将当前用户的channel加入进去
