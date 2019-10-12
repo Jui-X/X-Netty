@@ -8,7 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
-import netty.server.handler.HeartBeatHandler;
+import chatroom.server.handler.HeartBeatHandler;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
